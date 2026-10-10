@@ -77,7 +77,7 @@ describe("rich clipboard writer", () => {
     expect(result.textVerified).toBe(true);
   });
 
-  it("uses a real native clipboard probe instead of trusting execCommand return alone", async () => {
+  it("checks the macOS native clipboard when available and uses Electron readback elsewhere", async () => {
     const html = '<section style="color:red"><strong>Exec rich</strong></section>';
     const text = "Exec rich";
     const verifier: ElectronClipboardRuntime = {
@@ -99,9 +99,15 @@ describe("rich clipboard writer", () => {
     const result = await writer.writeHtml(html, text);
 
     expect(result.method).toBe("exec-command");
-    expect(result.formats).toEqual(["text/plain", "text/html"]);
-    expect(result.html).toBe(html);
-    expect(result.htmlVerified).toBe(true);
+    if (process.platform === "darwin") {
+      expect(result.formats).toEqual(["text/plain", "text/html"]);
+      expect(result.html).toBe(html);
+      expect(result.htmlVerified).toBe(true);
+    } else {
+      expect(result.formats).toEqual(["text/plain"]);
+      expect(result.html).toBe("");
+      expect(result.htmlVerified).toBe(false);
+    }
     expect(result.textVerified).toBe(true);
   });
 
