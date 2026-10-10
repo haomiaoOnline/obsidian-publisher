@@ -22,13 +22,13 @@ styleCount:value.split("style=").length-1,htmlLength:value.length});`;
       { timeout: 5000, maxBuffer: 4096 },
       (error, stdout) => {
         if (error) {
-          reject(error);
+          reject(error instanceof Error ? error : new Error("Native clipboard probe failed."));
           return;
         }
         try {
           resolve(JSON.parse(stdout.trim()) as NativeClipboardSnapshot);
         } catch (parseError) {
-          reject(parseError);
+          reject(parseError instanceof Error ? parseError : new Error(String(parseError)));
         }
       }
     );
@@ -92,10 +92,11 @@ export type BrowserClipboardWriteMethod =
 function tryExecCommandRichCopy(html: string): boolean {
   const host = document.createElement("div");
   host.contentEditable = "true";
-  host.style.position = "fixed";
-  host.style.left = "-10000px";
-  host.style.top = "0";
-  host.innerHTML = html;
+  host.classList.add("obsidian-publisher-clipboard-copy-host");
+  // DOMParser creates an inert document and avoids assigning copied article
+  // markup through innerHTML on an element in Obsidian's document.
+  const parsed = new DOMParser().parseFromString(html, "text/html");
+  host.replaceChildren(...Array.from(parsed.body.childNodes));
   document.body.appendChild(host);
 
   const range = document.createRange();

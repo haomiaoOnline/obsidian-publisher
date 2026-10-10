@@ -25,8 +25,13 @@ export async function probeWechatsyncBridge(
         });
         response.on("end", () => {
           try {
-            const status = JSON.parse(body);
-            resolve(status.connected === true ? "connected" : "disconnected");
+            const status: unknown = JSON.parse(body);
+            const connected =
+              typeof status === "object" &&
+              status !== null &&
+              "connected" in status &&
+              status.connected === true;
+            resolve(connected ? "connected" : "disconnected");
           } catch {
             resolve("not-running");
           }

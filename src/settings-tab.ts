@@ -13,8 +13,6 @@ export class PublisherSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "Publisher Workbench" });
-
     new Setting(containerEl)
       .setName("Dry run")
       .setDesc(

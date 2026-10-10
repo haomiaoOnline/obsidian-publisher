@@ -1,4 +1,4 @@
-> 社区插件正式名称 **Publisher Workbench**（ID publisher-workbench），项目仓库仍为 Obsidian Publisher。正式版 0.5.0 安装说明和第三方工具披露请参阅 [English README](./README.md)。旧版 ID obsidian-publisher 与社区版不能同时运行。
+> 社区插件正式名称 **Publisher Workbench**（ID publisher-workbench），项目仓库仍为 Obsidian Publisher。正式版 0.5.1 安装说明和第三方工具披露请参阅 [English README](./README.md)。旧版 ID obsidian-publisher 与社区版不能同时运行。
 
 > 最新验收：微信公众号完整图文富文本与 X Articles 五图草稿均已在真实编辑器保存并刷新复核。公众号请手动选择「保存为草稿」，不要仅依赖自动保存。社区插件不会自动安装 X Bridge 或 Wechatsync。
 
