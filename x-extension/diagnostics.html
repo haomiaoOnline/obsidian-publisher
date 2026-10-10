@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>xPoster Status</title>
+    <link rel="icon" href="assets/icon-32.png" />
+    <link rel="stylesheet" href="diagnostics.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <p>xPoster</p>
+        <h1>Status check</h1>
+      </header>
+      <div class="actions">
+        <button id="run">Check this tab</button>
+        <button id="openArticles" class="secondary">Open X Article</button>
+        <button id="openSidePanel" class="secondary">Open side panel</button>
+        <button id="copyJson" class="secondary" disabled>Copy details</button>
+      </div>
+      <section class="summary">
+        <div><span>Page</span><strong id="target">Unknown</strong></div>
+        <div><span>X Article</span><strong id="route">Unknown</strong></div>
+        <div><span>xPoster link</span><strong id="content">Unknown</strong></div>
+        <div><span>Page access</span><strong id="main">Unknown</strong></div>
+        <div><span>Editor</span><strong id="editor">Unknown</strong></div>
+        <div><span>Images</span><strong id="upload">Unknown</strong></div>
+        <div><span>Article</span><strong id="article">Unknown</strong></div>
+        <div><span>Draft text</span><strong id="contentRisk">Unknown</strong></div>
+        <div><span>Local images</span><strong id="vault">Unknown</strong></div>
+      </section>
+      <ol id="gateList" class="gate-list" aria-label="Live verification gate">
+        <li data-tone="idle">Open an X Article tab, then check whether xPoster can write into it.</li>
+      </ol>
+      <pre id="details">Open an X Article tab, then check whether xPoster can write into it.</pre>
+    </main>
+    <script src="src/shared.js"></script>
+    <script src="src/i18n.js"></script>
+    <script src="diagnostics.js"></script>
+  </body>
+</html>

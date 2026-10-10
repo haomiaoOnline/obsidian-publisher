@@ -1,0 +1,10 @@
+{
+  "id": "publisher-workbench",
+  "name": "Publisher Workbench",
+  "version": "0.5.0",
+  "minAppVersion": "1.6.0",
+  "description": "Create styled WeChat drafts and X Articles handoffs from Markdown notes.",
+  "author": "haomiaoOnline",
+  "authorUrl": "https://github.com/haomiaoOnline",
+  "isDesktopOnly": true
+}

@@ -1,0 +1,10 @@
+node_modules/
+main.js
+*.log
+.DS_Store
+coverage/
+dist/
+
+# Private machine-specific acceptance and handoff records.
+docs/ACCEPTANCE-*.md
+docs/HANDOFF-*.md

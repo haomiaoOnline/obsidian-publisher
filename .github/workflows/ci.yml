@@ -1,0 +1,28 @@
+name: Validate plugin
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Check types
+        run: npm run typecheck
+      - name: Run unit tests
+        run: npm test
+      - name: Validate X Bridge
+        run: npm run test:x-bridge
+      - name: Build
+        run: npm run build
+      - name: Check required release files
+        run: test -s main.js && test -s manifest.json && test -s styles.css

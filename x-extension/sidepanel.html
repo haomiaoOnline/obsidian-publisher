@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>xPoster</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+    <script src="src/i18n.js" defer></script>
+    <script src="src/shared.js" defer></script>
+    <script src="src/sidepanel-config.js" defer></script>
+    <script src="src/sidepanel-elements.js" defer></script>
+    <script src="src/sidepanel-editor.js" defer></script>
+    <script src="src/sidepanel-messages.js" defer></script>
+    <script src="src/sidepanel-patterns.js" defer></script>
+    <script src="vendor/minigfm.min.js" defer></script>
+    <script src="sidepanel.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">xPoster</p>
+          <h1 class="visually-hidden" data-i18n="Write Markdown to X Article">Write Markdown to X Article</h1>
+          <p class="topbar-subtitle visually-hidden" data-i18n="Paste Markdown, then write it into the current or new X Article.">Paste Markdown, then write it into the current or new X Article.</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="page-state action" id="pageState" type="button" data-page-action="openArticles" title="Open X Articles entry" aria-label="Open X Articles entry" data-i18n-title="Open X Articles entry" data-i18n-aria-label="Open X Articles entry">
+            <span data-i18n="Open X Articles entry">Open X Articles entry</span>
+          </button>
+        </div>
+      </header>
+
+      <nav class="tabs" aria-label="Workspace sections">
+        <button class="tab active" type="button" data-tab="draft" data-i18n="Pending">Pending</button>
+        <button class="tab" type="button" data-tab="records" data-i18n="Records">Records</button>
+        <button class="tab" type="button" data-tab="settings" data-i18n="Settings">Settings</button>
+      </nav>
+
+      <section class="composer panel active" id="draftPanel" data-panel="draft" data-empty-draft="true">
+        <div class="composer-head">
+          <span class="composer-title" data-i18n="Markdown draft">Markdown draft</span>
+          <div class="toolbar">
+            <button class="icon-button" id="loadFile" title="Choose .md file" aria-label="Choose .md file" data-i18n-title="Choose .md file" data-i18n-aria-label="Choose .md file">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm-1 2.5L17.5 9H13V4.5ZM8 13h3V9h2v4h3l-4 4-4-4Z"/></svg>
+              <span data-i18n="Choose .md file">Choose .md file</span>
+            </button>
+          </div>
+        </div>
+        <div class="drop-status" id="draftDropStatus" data-tone="idle" aria-live="polite">
+          <strong data-i18n="Markdown draft">Markdown draft</strong>
+          <span data-i18n="Paste Markdown here, choose a file, or drop .md files.">Paste Markdown here, choose a file, or drop .md files.</span>
+          <button class="secondary compact drop-status-action" id="draftDropAction" type="button" data-draft-drop-action="" hidden data-i18n="Choose folder">Choose folder</button>
+          <button class="drop-status-dismiss" id="draftDropDismiss" type="button" title="Close" aria-label="Close" data-i18n-title="Close" data-i18n-aria-label="Close" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>
+          </button>
+        </div>
+        <div class="draft-drop-target" id="draftDropTarget" aria-hidden="true">
+          <strong data-i18n="Drop Markdown here">Drop Markdown here</strong>
+          <span data-i18n="Release anywhere in this panel to load or queue the draft.">Release anywhere in this panel to load or queue the draft.</span>
+        </div>
+        <div class="draft-editor-shell">
+          <div class="draft-editor-toolbar" id="draftEditorToolbar" aria-label="Markdown editor tools" data-i18n-aria-label="Markdown editor tools">
+            <div class="draft-editor-formatting" role="group" aria-label="Markdown formatting" data-i18n-aria-label="Markdown formatting">
+              <button type="button" data-editor-command="bold" title="Bold" aria-label="Bold" data-i18n-title="Bold" data-i18n-aria-label="Bold">B</button>
+              <button type="button" data-editor-command="italic" title="Italic" aria-label="Italic" data-i18n-title="Italic" data-i18n-aria-label="Italic"><span>I</span></button>
+              <button type="button" data-editor-command="heading" title="Heading" aria-label="Heading" data-i18n-title="Heading" data-i18n-aria-label="Heading">#</button>
+              <button type="button" data-editor-command="code" title="Code" aria-label="Code" data-i18n-title="Code" data-i18n-aria-label="Code">`</button>
+              <button type="button" data-editor-command="link" title="Link" aria-label="Link" data-i18n-title="Link" data-i18n-aria-label="Link"><svg class="editor-command-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1L11 5"/><path d="M14 11a5 5 0 0 0-7.1 0l-2 2a5 5 0 0 0 7.1 7.1l1.1-1.1"/></svg></button>
+              <button type="button" data-editor-command="image" title="Image" aria-label="Image" data-i18n-title="Image" data-i18n-aria-label="Image"><svg class="editor-command-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="m8 15 3-3 2 2 3-4 4 5"/><path d="M8.5 9h.01"/></svg></button>
+              <button type="button" data-editor-command="table" title="Table" aria-label="Table" data-i18n-title="Table" data-i18n-aria-label="Table"><svg class="editor-command-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="1"/><path d="M4 10h16"/><path d="M4 15h16"/><path d="M10 5v14"/><path d="M16 5v14"/></svg></button>
+            </div>
+          </div>
+          <div class="draft-editor-input-wrap">
+            <pre class="draft-syntax-highlight" id="draftSyntaxHighlight" aria-hidden="true"></pre>
+            <textarea id="markdown" spellcheck="false" placeholder="Paste Markdown here, choose a file, or drop .md files." data-i18n-placeholder="Paste Markdown here, choose a file, or drop .md files."></textarea>
+          </div>
+          <div class="draft-inline-preview" id="draftInlinePreview" aria-label="Markdown preview" data-i18n-aria-label="Markdown preview" hidden>
+            <div class="draft-inline-preview-head" id="draftInlinePreviewHead">
+              <strong id="draftInlinePreviewTitle">No title yet</strong>
+              <span id="draftInlinePreviewMeta">Paste Markdown to preview.</span>
+            </div>
+            <div class="draft-inline-preview-body" id="draftInlinePreviewBody">
+              <p class="empty">Preview appears here.</p>
+            </div>
+          </div>
+          <div class="draft-editor-status" id="draftEditorStatus" aria-live="polite">
+            <span id="draftEditorStats"></span>
+            <button class="draft-editor-mode-toggle" id="draftEditorModeToggle" type="button" data-editor-mode-toggle aria-label="Preview" title="Preview">
+              <svg class="draft-mode-icon draft-mode-icon-read" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.2c4.4 0 7.6 3.3 9.1 6.8-1.5 3.5-4.7 6.8-9.1 6.8S4.4 15.5 2.9 12C4.4 8.5 7.6 5.2 12 5.2Zm0 2C8.7 7.2 6.2 9.4 5.1 12c1.1 2.6 3.6 4.8 6.9 4.8s5.8-2.2 6.9-4.8C17.8 9.4 15.3 7.2 12 7.2Zm0 1.8a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/></svg>
+              <svg class="draft-mode-icon draft-mode-icon-write" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.8 4.2a2.9 2.9 0 0 1 4.1 4.1L9.7 18.5 5 19l.5-4.7L15.8 4.2Zm1.4 1.4L7.4 15.4l-.2 1.4 1.4-.2 9.8-9.8a.9.9 0 0 0-1.2-1.2Z"/></svg>
+              <span data-mode-label="preview" data-i18n="Preview">Preview</span>
+              <span data-mode-label="edit" data-i18n="Edit">Edit</span>
+            </button>
+          </div>
+          <div class="draft-media-alert" id="draftMediaAlert" role="alert" aria-live="assertive" hidden>
+            <strong id="draftMediaAlertTitle" data-i18n="Too many images">Too many images</strong>
+            <span id="draftMediaAlertDetail">Images: 0/25.</span>
+          </div>
+        </div>
+        <section class="draft-queue" id="draftQueue" aria-label="Pending Markdown queue" data-i18n-aria-label="Pending Markdown queue" hidden>
+          <div class="draft-queue-head">
+            <div>
+              <strong data-i18n="Pending drafts">Pending drafts</strong>
+              <span id="draftQueueMeta">0 drafts</span>
+            </div>
+          </div>
+          <ol class="draft-queue-list" id="draftQueueList"></ol>
+        </section>
+
+        <section class="actions publish-dock" aria-label="Write to X draft" data-empty="true">
+          <div class="action-primary-block">
+            <button class="primary" id="importDraft" type="button" disabled aria-disabled="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v3H4V4Zm0 5h10v3H4V9Zm0 5h8v3H4v-3Zm13.5-.7V9h2v4.3l1.6-1.6 1.4 1.4-3.5 3.5-3.5-3.5 1.4-1.4 1.6 1.6ZM17 18h5v2h-5v-2Z"/></svg>
+              <span data-i18n="No Markdown yet">No Markdown yet</span>
+            </button>
+          </div>
+          <p class="import-hint" id="importHint" data-tone="ready" data-i18n="Paste in the editor above, or choose a .md file.">Paste in the editor above, or choose a .md file.</p>
+          <section class="inline-write-status" id="liveProgress" aria-label="Article writing progress" data-tone="idle" hidden>
+            <div>
+              <strong id="liveProgressTitle">Nothing is running</strong>
+              <span id="liveProgressDetail">Drop or paste a draft, then click Write to X draft.</span>
+            </div>
+            <span class="progress-state" id="liveProgressState">Idle</span>
+            <button class="progress-retry" id="retryUpload" type="button" hidden data-i18n="Retry now">Retry now</button>
+            <button class="progress-cancel" id="cancelImport" type="button" hidden data-i18n="Stop">Stop</button>
+            <span class="progress-meter" aria-label="Writing progress meter"><span id="liveProgressBar"></span></span>
+          </section>
+        </section>
+      </section>
+
+      <section class="records panel" id="recordsPanel" data-panel="records" aria-label="Records">
+        <div class="records-empty" id="recordsEmpty">
+          <strong data-i18n="No records yet">No records yet</strong>
+          <span data-i18n="Paste or load Markdown to save the first recoverable draft.">Paste or load Markdown to save the first recoverable draft.</span>
+        </div>
+        <section class="run-summary" id="runSummary" hidden>
+          <h2 data-i18n="Last import">Last import</h2>
+          <p id="summaryMessage" class="summary-message">No import has run yet.</p>
+          <div class="summary-grid">
+            <span data-i18n="Images">Images</span><strong id="summaryImages">0 / 0</strong>
+            <span data-i18n="Embeds and code">Embeds and code</span><strong id="summaryBlocks">0 / 0</strong>
+            <span data-i18n="Title">Title</span><strong id="summaryTitle" data-i18n="Not run">Not run</strong>
+            <span data-i18n="Cover">Cover</span><strong id="summaryCover" data-i18n="Not run">Not run</strong>
+            <span data-i18n="Elapsed">Elapsed</span><strong id="summaryElapsed">0.0s</strong>
+          </div>
+        </section>
+
+        <section class="record-history" id="recordHistory" aria-label="Records">
+          <div class="record-search">
+            <label class="visually-hidden" for="recordSearchInput" data-i18n="Find previous text">Find previous text</label>
+            <input id="recordSearchInput" type="search" autocomplete="off" placeholder="Search Markdown text, title, file, or URL" data-i18n-placeholder="Search Markdown text, title, file, or URL" />
+            <div class="record-search-meta">
+              <span id="recordHistoryMeta">No records yet.</span>
+              <span class="record-clear-wrap" hidden>
+                <button class="record-clear-button" id="clearRecordHistory" type="button" disabled data-i18n="Clear all" aria-expanded="false">Clear all</button>
+                <span class="record-clear-confirm" id="recordClearConfirm" hidden>
+                  <span data-i18n="Clear all saved draft records?">Clear all saved draft records?</span>
+                  <button type="button" id="cancelRecordClear" data-i18n="Cancel">Cancel</button>
+                  <button type="button" id="confirmRecordClear" data-i18n="Clear">Clear</button>
+                </span>
+              </span>
+            </div>
+            <span class="visually-hidden" id="recordSearchSummary">Find the Markdown you used before, copy it, or edit it before writing.</span>
+          </div>
+          <ol class="record-history-list" id="recordHistoryList">
+            <li class="record-history-empty">Paste or load Markdown to save the first recoverable draft.</li>
+          </ol>
+        </section>
+
+        <section class="live-runbook" id="verificationPanel" aria-label="Post-import review" hidden>
+          <div class="section-head">
+            <div>
+              <h2>After import</h2>
+              <p id="liveRunbookMeta">Confirm the X Article looks right before you finish.</p>
+            </div>
+            <button class="secondary compact" id="focusRunbook">Review</button>
+          </div>
+          <ol class="runbook-list" id="liveRunbookList">
+            <li data-runbook-step="draft" data-tone="idle">
+              <span class="runbook-index">1</span>
+              <div>
+                <strong>Add your draft</strong>
+              <span>Add Markdown or choose a file.</span>
+            </div>
+              <button class="secondary compact" type="button" data-runbook-action="addDraft">Add Markdown</button>
+            </li>
+            <li data-runbook-step="target" data-tone="idle">
+              <span class="runbook-index">2</span>
+              <div>
+                <strong>Open article</strong>
+                <span>Use an active X Articles tab.</span>
+              </div>
+              <button class="secondary compact" type="button" data-runbook-action="openArticles">Open</button>
+            </li>
+            <li data-runbook-step="diagnostics" data-tone="idle">
+              <span class="runbook-index">3</span>
+              <div>
+                <strong>Check article</strong>
+                <span>Make sure xPoster can reach the article editor and upload images.</span>
+              </div>
+              <button class="secondary compact" type="button" data-runbook-action="check">Check</button>
+            </li>
+            <li data-runbook-step="import" data-tone="idle">
+              <span class="runbook-index">4</span>
+              <div>
+                <strong>Import draft</strong>
+                <span>Import only after the check passes.</span>
+              </div>
+              <button class="secondary compact" type="button" data-runbook-action="import">Import</button>
+            </li>
+            <li data-runbook-step="result" data-tone="idle">
+              <span class="runbook-index">5</span>
+              <div>
+                <strong>Review in X</strong>
+                <span>Check the imported title, formatting, images, tables, embeds, code, and dividers.</span>
+              </div>
+              <button class="secondary compact" type="button" data-runbook-action="liveResult">Review</button>
+            </li>
+            <li data-runbook-step="evidence" data-tone="idle">
+              <span class="runbook-index">6</span>
+              <div>
+                <strong>Save a local record</strong>
+                <span>Copy or save a local record of the import.</span>
+              </div>
+              <button class="secondary compact" type="button" data-runbook-action="package">Records</button>
+            </li>
+          </ol>
+        </section>
+
+        <section class="live-result" id="liveResultPanel" aria-label="Article review checklist" hidden>
+          <div class="section-head">
+            <div>
+              <h2>Review in X</h2>
+              <p id="liveResultMeta">Tick what you confirmed in the X Article after import.</p>
+            </div>
+            <button class="secondary compact" id="resetLiveResult">Reset</button>
+          </div>
+          <ol class="live-result-list" id="liveResultList">
+            <li>
+              <label><input type="checkbox" data-live-check="title" /> Title set</label>
+              <span>The title from your selected draft.</span>
+            </li>
+            <li>
+              <label><input type="checkbox" data-live-check="text" /> Text formatting</label>
+              <span>Paragraph, quote, lists, inline styles, and link are preserved.</span>
+            </li>
+            <li>
+              <label><input type="checkbox" data-live-check="image" /> Image uploaded</label>
+              <span>Images appear in the article after X upload completes.</span>
+            </li>
+            <li>
+              <label><input type="checkbox" data-live-check="table" /> Table image</label>
+              <span>Markdown table is rendered and uploaded as an image.</span>
+            </li>
+            <li>
+              <label><input type="checkbox" data-live-check="tweet" /> Tweet embed</label>
+              <span>Tweet URL becomes an embedded tweet block.</span>
+            </li>
+            <li>
+              <label><input type="checkbox" data-live-check="code-divider" /> Code and divider</label>
+              <span>Code blocks and dividers appear correctly.</span>
+            </li>
+            <li>
+              <label><input type="checkbox" data-live-check="markers" /> xPoster placeholders removed</label>
+              <span>No xPoster placeholder text remains in the article.</span>
+            </li>
+            <li>
+              <label><input type="checkbox" data-live-check="diagnostics" /> Check passed</label>
+              <span>xPoster can still reach the editor and media upload.</span>
+            </li>
+            <li>
+              <label><input type="checkbox" data-live-check="page-import" /> X file import works</label>
+              <span>X can still open a Markdown file when needed.</span>
+            </li>
+          </ol>
+        </section>
+
+        <details class="diagnostics-details evidence-details" id="evidenceDetails" hidden>
+          <summary>
+            <span>
+              <strong>Save or copy results</strong>
+              <em>Open this when you need a local record.</em>
+            </span>
+          </summary>
+          <div class="diagnostics-body">
+
+        <section class="proof-deck" aria-label="Recent publish record">
+          <div class="section-head">
+            <div>
+              <h2>Recent publish record</h2>
+              <p id="proofDeckMeta">Load Markdown, check X, or write an article to create a record.</p>
+            </div>
+            <div class="button-cluster">
+              <button class="secondary compact" id="copyExtensionPath" hidden>Copy path</button>
+              <button class="secondary compact" id="copyProofDeck">Copy summary</button>
+            </div>
+          </div>
+          <div class="proof-path" id="extensionPath" hidden>the folder you cloned or downloaded</div>
+          <ol class="proof-list" id="proofDeckList">
+            <li data-proof="draft" data-tone="idle">
+              <strong>Draft saved</strong>
+              <span>No Markdown record saved yet.</span>
+            </li>
+            <li data-proof="article" data-tone="idle">
+              <strong>X Article</strong>
+              <span>No linked article yet.</span>
+            </li>
+            <li data-proof="result" data-tone="idle">
+              <strong>Write result</strong>
+              <span>No write result saved yet.</span>
+            </li>
+            <li data-proof="next" data-tone="idle">
+              <strong>Next step</strong>
+              <span>Load a draft or run Check article.</span>
+            </li>
+          </ol>
+        </section>
+
+        <section class="completion-audit" aria-label="Before you finish" hidden>
+          <div class="section-head">
+            <div>
+              <h2>Before you finish</h2>
+              <p id="completionAuditMeta">Finish the X Article review before calling this import done.</p>
+            </div>
+          </div>
+          <ol class="audit-list" id="completionAuditList">
+            <li data-audit="extension" data-tone="warn">
+              <strong>Extension loaded</strong>
+              <span>Load xPoster in the signed-in Chrome profile.</span>
+            </li>
+            <li data-audit="draft" data-tone="error">
+              <strong>Markdown draft</strong>
+              <span>Use a real Markdown draft.</span>
+            </li>
+            <li data-audit="target" data-tone="error">
+              <strong>X Article</strong>
+              <span>Open X Articles in the active tab.</span>
+            </li>
+            <li data-audit="bridge-upload" data-tone="warn">
+              <strong>Editor and images</strong>
+              <span>Click Check article in the live X editor.</span>
+            </li>
+            <li data-audit="remote-images" data-tone="idle">
+              <strong>Web images</strong>
+              <span>No web image links in this draft.</span>
+            </li>
+            <li data-audit="import" data-tone="idle">
+              <strong>Import completed</strong>
+              <span>No import run recorded yet.</span>
+            </li>
+            <li data-audit="result" data-tone="idle">
+              <strong>Article reviewed</strong>
+              <span>Record final article checks after import.</span>
+            </li>
+            <li data-audit="page-import" data-tone="idle">
+              <strong>Markdown file import</strong>
+              <span>Verify the file picker can import a Markdown draft.</span>
+            </li>
+            <li data-audit="package" data-tone="idle">
+              <strong>Saved records</strong>
+              <span>Copy or save the final record.</span>
+            </li>
+          </ol>
+        </section>
+
+        <details class="evidence-raw">
+          <summary>
+            <span>
+              <strong>Technical details</strong>
+              <em>Only needed for troubleshooting or support.</em>
+            </span>
+          </summary>
+          <section class="evidence" id="evidencePanel">
+            <div class="section-head">
+              <div>
+                <h2>Technical record</h2>
+                <p id="evidenceMeta">No technical record saved yet.</p>
+              </div>
+              <div class="button-cluster">
+                <button class="secondary compact" id="copyEvidence" disabled>Copy details</button>
+                <button class="secondary compact" id="copyEvidencePackage">Copy full record</button>
+                <button class="secondary compact" id="downloadEvidencePackage">Save file</button>
+              </div>
+            </div>
+            <pre id="evidenceText">Run Check or Write article to save a technical record.</pre>
+          </section>
+        </details>
+          </div>
+        </details>
+
+        <section class="activity" id="activityPanel" hidden>
+          <h2>Activity</h2>
+          <ol id="activityLog"></ol>
+        </section>
+      </section>
+
+      <section class="preview panel" id="previewPanel" data-panel="preview" aria-label="Draft preview" hidden>
+        <div class="preview-head">
+          <div>
+            <h2 id="previewTitle">No title yet</h2>
+            <p id="previewMeta">Write Markdown to inspect the article structure.</p>
+          </div>
+        </div>
+        <div class="preview-note" aria-label="Preview explanation">
+          <strong>Preview is the conversion check</strong>
+          <span>The selected draft stays as Markdown. This section shows what xPoster recognized before it fills X.</span>
+        </div>
+        <div class="preview-body" id="previewBody">
+          <p class="empty">This preview shows what xPoster found and what it will move into X.</p>
+        </div>
+        <div class="plan-readiness" id="planReadiness">
+          <span>Text blocks 0</span>
+          <span>Special blocks 0</span>
+          <span>Images 0</span>
+          <span>Local images 0</span>
+        </div>
+        <div class="plan-breakdown" id="planBreakdown">
+          <div class="plan-breakdown-head">
+          <h2>What xPoster will do</h2>
+          <p>Load Markdown to see the plain-language import steps.</p>
+          </div>
+          <ol class="plan-steps" id="planSteps">
+            <li>No plan generated.</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="inspector" aria-label="Markdown inspector" hidden>
+        <div class="metric">
+          <span>Title</span>
+          <strong id="titleMetric">None</strong>
+        </div>
+        <div class="metric">
+          <span>Images</span>
+          <strong id="imageMetric">0</strong>
+        </div>
+        <div class="metric">
+          <span>Tables</span>
+          <strong id="tableMetric">0</strong>
+        </div>
+        <div class="metric">
+          <span>Tweets</span>
+          <strong id="tweetMetric">0</strong>
+        </div>
+      </section>
+
+      <section class="readiness" aria-label="X Article readiness" hidden>
+        <div>
+          <span>X Article</span>
+          <strong id="targetReady">Open X</strong>
+        </div>
+        <div>
+          <span>Editor</span>
+          <strong id="editorReady">Unknown</strong>
+        </div>
+        <div>
+          <span>Local images</span>
+          <strong id="vaultReady">Optional</strong>
+        </div>
+      </section>
+
+      <details class="diagnostics-details" id="advancedDiagnostics" hidden>
+        <summary>
+          <span>
+            <strong>More details</strong>
+            <em>Open this only when xPoster asks you to fix something.</em>
+          </span>
+        </summary>
+        <div class="diagnostics-body">
+          <section class="target-context" id="targetContextPanel" aria-label="Article xPoster will fill" data-tone="idle">
+            <div class="section-head">
+              <div>
+                <h2>Article xPoster will fill</h2>
+                <p id="targetContextMeta">No active X Article selected.</p>
+              </div>
+              <span class="target-context-state" id="targetContextState">Idle</span>
+            </div>
+            <dl class="target-context-grid">
+              <div>
+                <dt>X page</dt>
+                <dd id="targetContextRoute">No X tab</dd>
+              </div>
+              <div>
+                <dt>Article ID</dt>
+                <dd id="targetContextArticle">None</dd>
+              </div>
+              <div>
+                <dt>Page</dt>
+                <dd id="targetContextTitle">Unknown</dd>
+              </div>
+              <div>
+                <dt>Current editor text</dt>
+                <dd id="targetContextSample">Open or create an X Article draft before importing.</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="issue-queue" aria-label="Issue queue">
+            <div class="section-head">
+              <div>
+                <h2>What needs attention</h2>
+                <p id="issueQueueMeta">Load Markdown to see what still needs fixing.</p>
+              </div>
+            </div>
+            <ol class="issue-list" id="issueQueueList">
+              <li data-tone="warn">
+                <span class="issue-source">Draft</span>
+              <div>
+                <strong>Add a Markdown draft</strong>
+              <span>Add a draft or choose a file.</span>
+            </div>
+                <button class="secondary compact" type="button" data-issue-action="addDraft">Add Markdown</button>
+              </li>
+            </ol>
+          </section>
+
+          <section class="conversion-map" aria-label="Draft contents">
+            <div class="section-head">
+              <div>
+                <h2>What is in your draft</h2>
+                <p id="conversionMapMeta">Load Markdown to see text, images, tables, tweets, code, and dividers.</p>
+              </div>
+            </div>
+            <ol class="conversion-list" id="conversionMapList">
+              <li data-map="title" data-tone="idle">
+                <strong>Title</strong>
+                <span>Waiting for frontmatter or first H1.</span>
+                <em>0</em>
+              </li>
+              <li data-map="cover" data-tone="idle">
+                <strong>Cover</strong>
+                <span>Waiting for frontmatter cover or first image.</span>
+                <em>0</em>
+              </li>
+              <li data-map="text" data-tone="idle">
+                <strong>Text</strong>
+                <span>Headings, paragraphs, lists, quotes, links, and inline styles.</span>
+                <em>0</em>
+              </li>
+              <li data-map="image" data-tone="idle">
+                <strong>Images</strong>
+                <span>Prepared as files, then uploaded through X.</span>
+                <em>0</em>
+              </li>
+              <li data-map="table" data-tone="idle">
+                <strong>Tables</strong>
+                <span>Rendered as images before upload.</span>
+                <em>0</em>
+              </li>
+              <li data-map="tweet" data-tone="idle">
+                <strong>Tweets</strong>
+                <span>Inserted as embedded tweets in X.</span>
+                <em>0</em>
+              </li>
+              <li data-map="code" data-tone="idle">
+                <strong>Code</strong>
+                <span>Inserted as code blocks in X.</span>
+                <em>0</em>
+              </li>
+              <li data-map="divider" data-tone="idle">
+                <strong>Dividers</strong>
+                <span>Inserted as dividers in X.</span>
+                <em>0</em>
+              </li>
+              <li data-map="local" data-tone="idle">
+                <strong>Local images</strong>
+                <span>Relative image paths need a readable folder.</span>
+                <em>0</em>
+              </li>
+              <li data-map="remote" data-tone="idle">
+                <strong>Web images</strong>
+                <span>No web image links in this draft.</span>
+                <em>0</em>
+              </li>
+            </ol>
+          </section>
+
+          <section class="import-ledger" aria-label="How xPoster will place the draft">
+            <div class="section-head">
+              <div>
+                <h2>How the draft will be placed</h2>
+                <p id="importLedgerMeta">Load Markdown to see how each part will be handled.</p>
+              </div>
+            </div>
+            <ol class="ledger-list" id="importLedgerList">
+              <li data-tone="idle">
+                <span class="ledger-index">-</span>
+                <div>
+                  <strong>No draft loaded</strong>
+                  <span>Each part will show whether it becomes text, an image, the title, the cover, or an embed.</span>
+                </div>
+                <em>Idle</em>
+              </li>
+            </ol>
+          </section>
+
+          <section class="review" aria-label="Draft review">
+            <div class="section-head">
+              <div>
+                <h2>Draft notes</h2>
+                <p id="reviewMeta">Write Markdown to get publishing notes.</p>
+              </div>
+            </div>
+            <ol class="review-list" id="reviewList">
+              <li>No draft loaded.</li>
+            </ol>
+          </section>
+
+          <section class="preflight" id="preflightPanel" aria-label="Publishing check">
+            <div class="section-head">
+              <div>
+                <h2>Article check</h2>
+                <p id="preflightMeta">Checks the draft, X Article tab, editor, images, and import plan.</p>
+              </div>
+              <button class="secondary compact" id="runPreflight">Check article</button>
+            </div>
+            <ol class="preflight-list" id="preflightList">
+              <li data-check="draft" data-tone="idle">
+                <span class="check-mark" aria-hidden="true"></span>
+                <div>
+                  <strong>Draft</strong>
+                  <span>Paste Markdown to begin.</span>
+                </div>
+              </li>
+              <li data-check="target" data-tone="idle">
+                <span class="check-mark" aria-hidden="true"></span>
+                <div>
+                  <strong>X Article</strong>
+                  <span>Open an X Articles tab.</span>
+                </div>
+              </li>
+              <li data-check="page-script" data-tone="idle">
+                <span class="check-mark" aria-hidden="true"></span>
+                <div>
+                  <strong>X page script</strong>
+                  <span>Refresh the X tab after updating xPoster.</span>
+                </div>
+              </li>
+              <li data-check="target-lock" data-tone="idle">
+                <span class="check-mark" aria-hidden="true"></span>
+                <div>
+                  <strong>Current article</strong>
+                  <span>Click Check article so xPoster confirms it will use this article.</span>
+                </div>
+              </li>
+              <li data-check="editor" data-tone="idle">
+                <span class="check-mark" aria-hidden="true"></span>
+                <div>
+                  <strong>Editor</strong>
+                  <span>Waiting for X page status.</span>
+                </div>
+              </li>
+              <li data-check="editor-content" data-tone="idle">
+                <span class="check-mark" aria-hidden="true"></span>
+                <div>
+                  <strong>Existing content</strong>
+                  <span>Click Check article to see whether the target draft already has content.</span>
+                </div>
+              </li>
+              <li data-check="bridge" data-tone="idle">
+                <span class="check-mark" aria-hidden="true"></span>
+                <div>
+                  <strong>Can write to X</strong>
+                  <span>Run a check with the X tab active.</span>
+                </div>
+              </li>
+              <li data-check="uploads" data-tone="idle">
+                <span class="check-mark" aria-hidden="true"></span>
+                <div>
+                  <strong>Image uploads</strong>
+                  <span>No image upload requirement detected yet.</span>
+                </div>
+              </li>
+              <li data-check="assets" data-tone="idle">
+                <span class="check-mark" aria-hidden="true"></span>
+                <div>
+                  <strong>Local images</strong>
+                  <span>Local image folder is optional.</span>
+                </div>
+                <button class="secondary compact preflight-action" type="button" data-preflight-action="chooseVault" hidden data-i18n="Choose folder">Choose folder</button>
+              </li>
+              <li data-check="remote-images" data-tone="idle">
+                <span class="check-mark" aria-hidden="true"></span>
+                <div>
+                  <strong>Web images</strong>
+                  <span>No web image links in this draft.</span>
+                </div>
+              </li>
+              <li data-check="plan" data-tone="idle">
+                <span class="check-mark" aria-hidden="true"></span>
+                <div>
+                  <strong>Draft contents</strong>
+                  <span>No import plan generated yet.</span>
+                </div>
+              </li>
+            </ol>
+          </section>
+
+          <section class="execution-timeline" aria-label="Import steps">
+            <div class="section-head">
+              <div>
+                <h2>Import steps</h2>
+                <p id="timelineMeta">Load Markdown to see the steps xPoster will run.</p>
+              </div>
+            </div>
+            <ol class="timeline-list" id="timelineList">
+              <li data-timeline-step="parse" data-tone="idle">
+                <span class="timeline-index">1</span>
+                <div>
+                  <strong>Read Markdown</strong>
+                  <span>Waiting for a draft.</span>
+                </div>
+                <em>Idle</em>
+              </li>
+              <li data-timeline-step="metadata" data-tone="idle">
+                <span class="timeline-index">2</span>
+                <div>
+                  <strong>Set title and cover</strong>
+                  <span>Title and cover will be prepared first when available.</span>
+                </div>
+                <em>Idle</em>
+              </li>
+              <li data-timeline-step="media" data-tone="idle">
+                <span class="timeline-index">3</span>
+                <div>
+                  <strong>Prepare media</strong>
+                  <span>Images and tables will be prepared after parsing.</span>
+                </div>
+                <em>Idle</em>
+              </li>
+              <li data-timeline-step="paste" data-tone="idle">
+                <span class="timeline-index">4</span>
+                <div>
+                  <strong>Write article body</strong>
+                  <span>The article body is not ready yet.</span>
+                </div>
+                <em>Idle</em>
+              </li>
+              <li data-timeline-step="replace" data-tone="idle">
+                <span class="timeline-index">5</span>
+                <div>
+                  <strong>Place images and embeds</strong>
+                  <span>X editor status is unknown.</span>
+                </div>
+                <em>Idle</em>
+              </li>
+              <li data-timeline-step="evidence" data-tone="idle">
+                <span class="timeline-index">6</span>
+                <div>
+                  <strong>Save what happened</strong>
+                  <span>Nothing saved yet.</span>
+                </div>
+                <em>Idle</em>
+              </li>
+            </ol>
+          </section>
+
+          <section class="recovery-panel" id="recoveryPanel" aria-label="Fix problems" data-tone="idle">
+            <div class="section-head">
+              <div>
+                <h2>If something goes wrong</h2>
+                <p id="recoveryMeta">No problem found yet.</p>
+              </div>
+              <span class="recovery-state" id="recoveryState">Idle</span>
+            </div>
+            <ol class="recovery-list" id="recoveryList">
+              <li data-tone="idle">
+                <span class="recovery-index">1</span>
+                <div>
+                  <strong>Save what happened</strong>
+                  <span>Use Check article or Import so xPoster can show the exact problem if X changes.</span>
+                </div>
+                <button class="secondary compact" type="button" data-recovery-action="check">Check</button>
+              </li>
+            </ol>
+          </section>
+        </div>
+      </details>
+
+      <section class="settings panel" data-panel="settings">
+        <h2 data-i18n="Settings">Settings</h2>
+        <div class="setting-row setting-row-language">
+          <div>
+            <strong data-i18n="Language">Language</strong>
+            <span data-i18n="Choose the side panel language.">Choose the side panel language.</span>
+          </div>
+          <div class="language-control" id="languageControl">
+            <span data-i18n="Language">Language</span>
+            <select class="language-native-select" id="languageSelect" aria-label="Language" data-i18n-aria-label="Language" aria-hidden="true" tabindex="-1">
+              <option value="auto">Automatic</option>
+              <option value="en">English</option>
+              <option value="zh">中文</option>
+              <option value="zh-TW">繁體中文</option>
+              <option value="ja">日本語</option>
+              <option value="fr">Français</option>
+              <option value="ru">Русский</option>
+              <option value="es">Español</option>
+              <option value="de">Deutsch</option>
+              <option value="pt">Português</option>
+              <option value="ko">한국어</option>
+            </select>
+            <button class="language-select-button" id="languageSelectButton" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="languageOptionsList" aria-label="Language" data-i18n-aria-label="Language">
+              <span class="language-select-value" id="languageSelectValue">Automatic</span>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+            </button>
+            <div class="language-options" id="languageOptionsList" role="listbox" aria-label="Language" data-i18n-aria-label="Language" hidden></div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong data-i18n="Appearance">Appearance</strong>
+            <span data-i18n="Choose how xPoster looks in the side panel.">Choose how xPoster looks in the side panel.</span>
+          </div>
+          <fieldset class="theme-control" id="themeChoice" aria-label="Appearance" data-i18n-aria-label="Appearance">
+            <legend class="visually-hidden" data-i18n="Appearance">Appearance</legend>
+            <label>
+              <input type="radio" name="themeMode" value="system" />
+              <span data-i18n="System">System</span>
+            </label>
+            <label>
+              <input type="radio" name="themeMode" value="light" checked />
+              <span data-i18n="Light">Light</span>
+            </label>
+            <label>
+              <input type="radio" name="themeMode" value="dark" />
+              <span data-i18n="Dark">Dark</span>
+            </label>
+          </fieldset>
+        </div>
+        <div class="setting-row">
+          <div>
+            <strong data-i18n="Local image folder">Local image folder</strong>
+            <span id="vaultSettingsText">xPoster will ask when a Markdown draft uses local image paths.</span>
+          </div>
+          <div class="button-cluster">
+            <button class="secondary compact danger" id="clearVaultSettings" disabled data-i18n="Clear">Clear</button>
+          </div>
+        </div>
+        <div class="setting-row setting-row-stack setting-row-import">
+          <div>
+            <strong data-i18n="Article import">Article import</strong>
+            <span data-i18n="Choose metadata and safe text cleanup before writing to X.">Choose metadata and safe text cleanup before writing to X.</span>
+          </div>
+          <div class="setting-option-groups">
+            <fieldset class="setting-checks" id="metadataOptions" aria-label="Title and cover" data-i18n-aria-label="Title and cover">
+              <legend class="setting-checks-heading" data-i18n="Title and cover">Title and cover</legend>
+              <label>
+                <input type="checkbox" id="importTitleOption" checked />
+                <span>
+                  <strong data-i18n="Set article title">Set article title</strong>
+                  <em data-i18n="Use frontmatter title or the first H1.">Use frontmatter title or the first H1.</em>
+                </span>
+              </label>
+              <label>
+                <input type="checkbox" id="importCoverOption" checked />
+                <span>
+                  <strong data-i18n="Set article cover">Set article cover</strong>
+                  <em data-i18n="Use frontmatter cover or the first image.">Use frontmatter cover or the first image.</em>
+                </span>
+              </label>
+            </fieldset>
+            <fieldset class="setting-checks" id="draftProcessingOptions" aria-label="Text cleanup" data-i18n-aria-label="Text cleanup">
+              <legend class="setting-checks-heading" data-i18n="Text cleanup">Text cleanup</legend>
+              <label>
+                <input type="checkbox" id="smartPunctuationOption" />
+                <span>
+                  <strong data-i18n="Smart punctuation">Smart punctuation</strong>
+                  <em data-i18n="Fix visible Chinese punctuation while leaving code, links, and URLs unchanged.">Fix visible Chinese punctuation while leaving code, links, and URLs unchanged.</em>
+                </span>
+              </label>
+            </fieldset>
+          </div>
+        </div>
+        <div class="setting-row setting-row-stack">
+          <div>
+            <strong data-i18n="Article export">Article export</strong>
+            <span data-i18n="On published X Article pages, show Markdown tools beside the article title.">On published X Article pages, show Markdown tools beside the article title.</span>
+          </div>
+          <fieldset class="setting-checks" id="articleExportOptions" aria-label="Article export" data-i18n-aria-label="Article export">
+            <legend class="visually-hidden" data-i18n="Article export">Article export</legend>
+            <label>
+              <input type="checkbox" id="articleExportOption" checked />
+              <span>
+                <strong data-i18n="Published article Markdown tools">Published article Markdown tools</strong>
+                <em data-i18n="Copy or download a readable X Article as Markdown from its title area.">Copy or download a readable X Article as Markdown from its title area.</em>
+              </span>
+            </label>
+          </fieldset>
+        </div>
+        <div class="setting-row setting-row-stack">
+          <div>
+            <strong data-i18n="Success feedback">Success feedback</strong>
+            <span data-i18n="Choose the small celebration shown after a successful write.">Choose the small celebration shown after a successful write.</span>
+          </div>
+          <fieldset class="setting-checks" id="successFeedbackOptions" aria-label="Success feedback" data-i18n-aria-label="Success feedback">
+            <legend class="visually-hidden" data-i18n="Success feedback">Success feedback</legend>
+            <label>
+              <input type="checkbox" id="confettiOption" checked />
+              <span>
+                <strong data-i18n="Celebration animation">Celebration animation</strong>
+                <em data-i18n="Show a brief celebration on the X page when X reports a completed write.">Show a brief celebration on the X page when X reports a completed write.</em>
+              </span>
+            </label>
+            <label>
+              <input type="checkbox" id="successSoundOption" checked />
+              <span>
+                <strong data-i18n="Completion sound">Completion sound</strong>
+                <em data-i18n="Play a short local chime after a successful write.">Play a short local chime after a successful write.</em>
+              </span>
+            </label>
+          </fieldset>
+          <div class="setting-subcontrols setting-sound-controls">
+            <label class="setting-sound-style">
+              <span data-i18n="Sound style">Sound style</span>
+              <select id="successSoundStyle" aria-label="Sound style" data-i18n-aria-label="Sound style">
+                <option value="soft" data-i18n="Soft chime">Soft chime</option>
+                <option value="bell" data-i18n="Warm bell">Warm bell</option>
+                <option value="pop" data-i18n="Light pop">Light pop</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="setting-row setting-row-stack">
+          <div>
+            <strong data-i18n="Project and author">Project and author</strong>
+            <span data-i18n="Open the project page or follow updates from the author.">Open the project page or follow updates from the author.</span>
+          </div>
+          <div class="setting-links" aria-label="Project and author" data-i18n-aria-label="Project and author">
+            <a class="setting-link" href="https://github.com/nevertoday/xposter" target="_blank" rel="noopener noreferrer" title="Open GitHub project" aria-label="Open GitHub project" data-i18n-title="Open GitHub project" data-i18n-aria-label="Open GitHub project">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 0 1.6 1.1 1.6 1.1.9 1.5 2.4 1.1 2.9.8.1-.7.4-1.1.7-1.3-2.2-.3-4.6-1.1-4.6-5A3.9 3.9 0 0 1 6.8 8.9c-.1-.3-.5-1.3.1-2.7 0 0 .9-.3 2.8 1a9.7 9.7 0 0 1 5.1 0c1.9-1.3 2.8-1 2.8-1 .6 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1.1 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7 1 .7 2v2.4c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg>
+              <span data-i18n="GitHub project">GitHub project</span>
+            </a>
+            <a class="setting-link" href="https://x.com/xiaoxiaodong01" target="_blank" rel="noopener noreferrer" title="Follow author on X" aria-label="Follow author on X" data-i18n-title="Follow author on X" data-i18n-aria-label="Follow author on X">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.4 10.5 21.7 2h-1.8l-6.3 7.4L8.5 2H2.7l7.7 11.2L2.7 22h1.8l6.7-7.8 5.3 7.8h5.8l-7.9-11.5Zm-2.4 2.8-.8-1.1L5 3.4h2.6l5 7.1.8 1.1 6.5 9.1h-2.6L12 13.3Z"/></svg>
+              <span data-i18n="Follow author on X">Follow author on X</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <div class="record-edit-sheet" id="recordEditSheet" role="dialog" aria-modal="true" aria-labelledby="recordEditTitle" hidden>
+      <section class="record-edit-dialog">
+        <header>
+          <div>
+            <strong id="recordEditTitle">Edit saved Markdown</strong>
+            <span id="recordEditMeta">Saved Markdown</span>
+          </div>
+          <button class="record-icon-action" type="button" data-record-action="cancel-edit" title="Close" aria-label="Close" data-i18n-title="Close" data-i18n-aria-label="Close">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5Z"/></svg>
+          </button>
+        </header>
+        <div class="record-edit-toolbar" id="recordEditToolbar" aria-label="Markdown editor tools" data-i18n-aria-label="Markdown editor tools">
+          <div class="draft-editor-formatting" role="group" aria-label="Markdown formatting" data-i18n-aria-label="Markdown formatting">
+            <button type="button" data-record-action="editor-command" data-editor-command="bold" title="Bold" aria-label="Bold" data-i18n-title="Bold" data-i18n-aria-label="Bold">B</button>
+            <button type="button" data-record-action="editor-command" data-editor-command="italic" title="Italic" aria-label="Italic" data-i18n-title="Italic" data-i18n-aria-label="Italic"><span>I</span></button>
+            <button type="button" data-record-action="editor-command" data-editor-command="heading" title="Heading" aria-label="Heading" data-i18n-title="Heading" data-i18n-aria-label="Heading">#</button>
+            <button type="button" data-record-action="editor-command" data-editor-command="code" title="Code" aria-label="Code" data-i18n-title="Code" data-i18n-aria-label="Code">`</button>
+            <button type="button" data-record-action="editor-command" data-editor-command="link" title="Link" aria-label="Link" data-i18n-title="Link" data-i18n-aria-label="Link"><svg class="editor-command-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1L11 5"/><path d="M14 11a5 5 0 0 0-7.1 0l-2 2a5 5 0 0 0 7.1 7.1l1.1-1.1"/></svg></button>
+            <button type="button" data-record-action="editor-command" data-editor-command="image" title="Image" aria-label="Image" data-i18n-title="Image" data-i18n-aria-label="Image"><svg class="editor-command-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="m8 15 3-3 2 2 3-4 4 5"/><path d="M8.5 9h.01"/></svg></button>
+            <button type="button" data-record-action="editor-command" data-editor-command="table" title="Table" aria-label="Table" data-i18n-title="Table" data-i18n-aria-label="Table"><svg class="editor-command-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="1"/><path d="M4 10h16"/><path d="M4 15h16"/><path d="M10 5v14"/><path d="M16 5v14"/></svg></button>
+          </div>
+        </div>
+        <div class="record-edit-body" id="recordEditBody" data-mode="edit">
+          <div class="record-edit-input-wrap" id="recordEditInputWrap">
+            <pre class="draft-syntax-highlight record-edit-highlight" id="recordEditHighlight" aria-hidden="true"></pre>
+            <textarea id="recordEditTextarea" spellcheck="false"></textarea>
+          </div>
+          <div class="draft-inline-preview record-edit-preview" id="recordEditPreview" aria-label="Markdown preview" data-i18n-aria-label="Markdown preview" hidden>
+            <div class="draft-inline-preview-body" id="recordEditPreviewBody">
+              <p class="empty">Preview appears here.</p>
+            </div>
+          </div>
+        </div>
+        <div class="record-edit-actions">
+          <div class="record-edit-context">
+            <span class="record-edit-stats" id="recordEditStats">0 chars</span>
+            <button class="draft-editor-mode-toggle record-edit-mode-toggle" id="recordEditModeToggle" type="button" data-record-action="toggle-preview" aria-label="Preview" title="Preview">
+              <svg class="draft-mode-icon draft-mode-icon-read" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.2c4.4 0 7.6 3.3 9.1 6.8-1.5 3.5-4.7 6.8-9.1 6.8S4.4 15.5 2.9 12C4.4 8.5 7.6 5.2 12 5.2Zm0 2C8.7 7.2 6.2 9.4 5.1 12c1.1 2.6 3.6 4.8 6.9 4.8s5.8-2.2 6.9-4.8C17.8 9.4 15.3 7.2 12 7.2Zm0 1.8a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/></svg>
+              <svg class="draft-mode-icon draft-mode-icon-write" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.8 4.2a2.9 2.9 0 0 1 4.1 4.1L9.7 18.5 5 19l.5-4.7L15.8 4.2Zm1.4 1.4L7.4 15.4l-.2 1.4 1.4-.2 9.8-9.8a.9.9 0 0 0-1.2-1.2Z"/></svg>
+              <span data-mode-label="edit" data-i18n="Edit">Edit</span>
+              <span data-mode-label="preview" data-i18n="Preview">Preview</span>
+            </button>
+          </div>
+          <div class="record-edit-action-group">
+            <button class="record-icon-action record-edit-copy" type="button" data-record-action="copy-edited" title="Copy text" aria-label="Copy text" data-i18n-title="Copy text" data-i18n-aria-label="Copy text">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7h10v13H8V7Zm2 2v9h6V9h-6ZM5 4h10v2H7v10H5V4Z"/></svg>
+            </button>
+            <button class="secondary compact" type="button" data-record-action="use-edited">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v2H5V4Zm0 4h8v2H5V8Zm0 4h7v2H5v-2Zm11 1V8h2v5h3l-4 4-4-4h3Zm-3 6h8v2h-8v-2Z"/></svg>
+              <span id="recordEditPrimaryLabel" data-i18n="Save">Save</span>
+            </button>
+            <button class="primary compact" id="recordEditWriteButton" type="button" data-record-action="write-edited" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v3H4V4Zm0 5h10v3H4V9Zm0 5h8v3H4v-3Zm13.5-.7V9h2v4.3l1.6-1.6 1.4 1.4-3.5 3.5-3.5-3.5 1.4-1.4 1.6 1.6ZM17 18h5v2h-5v-2Z"/></svg>
+              <span data-i18n="Write this draft">Write this draft</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
