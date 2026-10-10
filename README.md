@@ -127,7 +127,7 @@ See [architecture](./docs/architecture.md) and [MVP test scope](./docs/MVP_ACCEP
 
 ## Compatibility and limitations
 
-- First community-facing release: **0.5.0** (the Chrome X Bridge is version **0.1.10**).
+- First community-facing release: **0.5.0**; review-compliance patch: **0.5.1** (the Chrome X Bridge is version **0.1.10**).
 - Requires Obsidian desktop 1.6.0+. Mobile not supported.
 - Frontmatter normalization is intentionally limited to the fields needed by the MVP.
 - WeChat rich copy and X Articles drafts have been verified end to end; Xiaohongshu is adapter-dependent.

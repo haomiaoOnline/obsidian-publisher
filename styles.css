@@ -169,6 +169,7 @@
 }
 
 .obsidian-publisher-theme-swatch {
+  background: var(--publisher-swatch-color);
   width: 20px;
   height: 8px;
   border-radius: 999px;
@@ -666,4 +667,30 @@
   .obsidian-publisher-preview-body.is-wechat {
     padding: 28px 24px 44px;
   }
+}
+
+
+/* Keep temporary content off-screen while preserving computed WeChat layout
+   and native rich-clipboard selection. */
+.obsidian-publisher-wechat-staging-host {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 720px;
+  background: #fff;
+  color: #262626;
+}
+
+.obsidian-publisher-wechat-staging-host > section {
+  width: 100%;
+}
+
+.obsidian-publisher-clipboard-copy-host {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+}
+
+.obsidian-publisher-hidden {
+  display: none;
 }

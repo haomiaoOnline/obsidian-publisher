@@ -285,11 +285,11 @@ export class PublishModal extends Modal {
       const bodySwatch = swatches.createSpan({
         cls: "obsidian-publisher-theme-swatch"
       });
-      bodySwatch.style.background = preset.layout.bodyColor;
+      bodySwatch.setCssProps({"--publisher-swatch-color": preset.layout.bodyColor});
       const accentSwatch = swatches.createSpan({
         cls: "obsidian-publisher-theme-swatch"
       });
-      accentSwatch.style.background = preset.layout.accentColor;
+      accentSwatch.setCssProps({"--publisher-swatch-color": preset.layout.accentColor});
 
       const copy = button.createDiv({
         cls: "obsidian-publisher-theme-copy"
@@ -579,14 +579,14 @@ export class PublishModal extends Modal {
       const details = row.createEl("pre", {
         cls: "obsidian-publisher-status-details"
       });
-      details.style.display = "none";
+      details.classList.add("obsidian-publisher-hidden");
 
       const retryButton = row.createEl("button", {
         cls: "obsidian-publisher-retry-button",
         text: "Retry this destination"
       });
       retryButton.type = "button";
-      retryButton.style.display = "none";
+      retryButton.classList.add("obsidian-publisher-hidden");
       retryButton.addEventListener("click", () => {
         void this.retryPlatform(platform);
       });
@@ -811,15 +811,9 @@ export class PublishModal extends Modal {
     article: NormalizedArticle
   ): Promise<{ html: string; embeddedImages: number }> {
     const stagingHost = document.createElement("div");
-    stagingHost.style.position = "fixed";
-    stagingHost.style.left = "-10000px";
-    stagingHost.style.top = "0";
-    stagingHost.style.width = "720px";
-    stagingHost.style.background = "#ffffff";
-    stagingHost.style.color = "#262626";
+    stagingHost.classList.add("obsidian-publisher-wechat-staging-host");
 
     const container = document.createElement("section");
-    container.style.width = "100%";
     stagingHost.appendChild(container);
     document.body.appendChild(stagingHost);
 
@@ -916,8 +910,9 @@ export class PublishModal extends Modal {
         );
       }
 
-      const plain = document.createElement("div");
-      plain.innerHTML = html;
+      // Parse for text extraction without inserting untrusted HTML into
+      // Obsidian's live document or assigning directly to innerHTML.
+      const plain = new DOMParser().parseFromString(html, "text/html").body;
       this.preparedWechatClipboard = {
         html,
         text: plain.textContent ?? article.title,
@@ -1055,11 +1050,11 @@ export class PublishModal extends Modal {
 
     const detailText = details?.trim() ?? "";
     view.details.setText(detailText);
-    view.details.style.display = detailText ? "" : "none";
+    view.details.classList.toggle("obsidian-publisher-hidden", !detailText);
 
     const canRetry =
       status === "failure" && !this.busyPlatforms.has(platform);
-    view.retryButton.style.display = canRetry ? "" : "none";
+    view.retryButton.classList.toggle("obsidian-publisher-hidden", !canRetry);
     view.retryButton.disabled = this.busyPlatforms.has(platform);
   }
 
@@ -1141,7 +1136,7 @@ export class PublishModal extends Modal {
       targets.forEach((platform) => {
         const view = this.statusViews.get(platform);
         if (view?.root.dataset.status === "failure") {
-          view.retryButton.style.display = "";
+          view.retryButton.classList.remove("obsidian-publisher-hidden");
           view.retryButton.disabled = false;
         }
       });

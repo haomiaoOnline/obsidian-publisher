@@ -118,14 +118,14 @@ function sectionStyle(
   style: WechatSectionStyle,
   accentColor: string
 ): void {
-  heading.style.border = "";
-  heading.style.borderLeft = "";
-  heading.style.borderBottom = "";
-  heading.style.borderRadius = "";
-  heading.style.padding = "";
-  heading.style.paddingLeft = "";
-  heading.style.paddingBottom = "";
-  heading.style.background = "";
+  setStyles(heading, { border: "" });
+  setStyles(heading, { borderLeft: "" });
+  setStyles(heading, { borderBottom: "" });
+  setStyles(heading, { borderRadius: "" });
+  setStyles(heading, { padding: "" });
+  setStyles(heading, { paddingLeft: "" });
+  setStyles(heading, { paddingBottom: "" });
+  setStyles(heading, { background: "" });
 
   if (style === "left-bar") {
     setStyles(heading, {
@@ -566,7 +566,7 @@ export function cloneWechatFragmentWithComputedStyles(
       }
       cloneNode.style.setProperty(cssPropertyName(property), value);
     }
-    cloneNode.style.boxSizing = "border-box";
+    setStyles(cloneNode, { boxSizing: "border-box" });
     cloneNode.removeAttribute("class");
     cloneNode.removeAttribute("id");
 
@@ -586,13 +586,13 @@ export function cloneWechatFragmentWithComputedStyles(
         Number.isFinite(lineHeight) &&
         lineHeight < fontSize
       ) {
-        cloneNode.style.lineHeight = String(Math.max(1.5, lineHeight / fontSize));
+        setStyles(cloneNode, { lineHeight: String(Math.max(1.5, lineHeight / fontSize)) });
       }
-      cloneNode.style.minWidth = "0";
-      cloneNode.style.maxWidth = "100%";
-      cloneNode.style.whiteSpace = "normal";
-      cloneNode.style.wordBreak = "break-word";
-      cloneNode.style.overflowWrap = "anywhere";
+      setStyles(cloneNode, { minWidth: "0" });
+      setStyles(cloneNode, { maxWidth: "100%" });
+      setStyles(cloneNode, { whiteSpace: "normal" });
+      setStyles(cloneNode, { wordBreak: "break-word" });
+      setStyles(cloneNode, { overflowWrap: "anywhere" });
     }
 
     if (
@@ -606,13 +606,12 @@ export function cloneWechatFragmentWithComputedStyles(
           "h1,h2,h3,h4,h5,h6,p,li,blockquote,td,th"
         ) ?? sourceNode.parentElement;
       if (parentTextBlock) {
-        cloneNode.style.fontSize =
-          window.getComputedStyle(parentTextBlock).fontSize;
+        setStyles(cloneNode, { fontSize: window.getComputedStyle(parentTextBlock).fontSize });
       }
       cloneNode.style.removeProperty("line-height");
       cloneNode.style.removeProperty("white-space");
-      cloneNode.style.wordBreak = "break-word";
-      cloneNode.style.overflowWrap = "anywhere";
+      setStyles(cloneNode, { wordBreak: "break-word" });
+      setStyles(cloneNode, { overflowWrap: "anywhere" });
       cloneNode.removeAttribute("size");
     }
 
@@ -630,31 +629,31 @@ export function cloneWechatFragmentWithComputedStyles(
       cloneNode.removeAttribute("align");
       cloneNode.removeAttribute("hspace");
       cloneNode.removeAttribute("vspace");
-      cloneNode.style.display = "block";
-      cloneNode.style.position = "static";
-      cloneNode.style.float = "none";
-      cloneNode.style.clear = "both";
-      cloneNode.style.left = "auto";
-      cloneNode.style.right = "auto";
-      cloneNode.style.top = "auto";
-      cloneNode.style.bottom = "auto";
-      cloneNode.style.objectFit = "contain";
-      cloneNode.style.objectPosition = "center center";
-      cloneNode.style.width = isFullWidth
+      setStyles(cloneNode, { display: "block" });
+      setStyles(cloneNode, { position: "static" });
+      setStyles(cloneNode, { float: "none" });
+      setStyles(cloneNode, { clear: "both" });
+      setStyles(cloneNode, { left: "auto" });
+      setStyles(cloneNode, { right: "auto" });
+      setStyles(cloneNode, { top: "auto" });
+      setStyles(cloneNode, { bottom: "auto" });
+      setStyles(cloneNode, { objectFit: "contain" });
+      setStyles(cloneNode, { objectPosition: "center center" });
+      setStyles(cloneNode, { width: isFullWidth
         ? "100%"
-        : Math.ceil(renderedWidth) + "px";
-      cloneNode.style.height = "auto";
-      cloneNode.style.maxWidth = "100%";
-      cloneNode.style.marginLeft = "auto";
-      cloneNode.style.marginRight = "auto";
+        : Math.ceil(renderedWidth) + "px" });
+      setStyles(cloneNode, { height: "auto" });
+      setStyles(cloneNode, { maxWidth: "100%" });
+      setStyles(cloneNode, { marginLeft: "auto" });
+      setStyles(cloneNode, { marginRight: "auto" });
     }
   });
 
-  clone.style.display = "block";
-  clone.style.width = "100%";
-  clone.style.maxWidth = "100%";
-  clone.style.margin = "0";
-  clone.style.padding = "0";
+  setStyles(clone, { display: "block" });
+  setStyles(clone, { width: "100%" });
+  setStyles(clone, { maxWidth: "100%" });
+  setStyles(clone, { margin: "0" });
+  setStyles(clone, { padding: "0" });
   clone.dataset.obsidianPublisherCopy = WECHAT_CLIPBOARD_MARKER;
 
   return clone;

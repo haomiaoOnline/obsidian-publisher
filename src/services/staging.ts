@@ -5,7 +5,7 @@ import type { NormalizedArticle } from "../types";
 
 function safeBaseName(title: string): string {
   const trimmed = title
-    .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "-")
+    .replace(/[<>:"/\\|?*\p{Cc}]/gu, "-")
     .replace(/\s+/g, " ")
     .trim();
 
